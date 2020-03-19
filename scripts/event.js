@@ -1,6 +1,6 @@
 (() => {
-    if (document.location.href.endsWith('/registered') && document.location.href.includes('/event-')) {
-        console.log("Intra refined Setup: EVENT");
+    if (document.location.href.match('\/module\/[0-9]{4}\/[A-Z]-[A-Z]{3}-[0-9]{3}\/[A-Z]{3}-[0-9]+-[0-9]+\/acti-[0-9]+\/event-[0-9]+\/registered')) {
+        console.log("Intra refined Setup: EVENT REGISTERED");
 
         const list_inscrit_table = document.getElementById('list-inscrit');
         let button = null

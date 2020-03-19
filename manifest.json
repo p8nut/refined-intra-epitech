@@ -15,9 +15,9 @@
                 "scripts/script.js",
                 "scripts/modules.js",
                 "scripts/user.js", 
-                "scripts/activity.js",
                 "scripts/event.js",
-                "scripts/project.js"
+                "scripts/project.js",
+                "scripts/sidebar.js"
 
             ]
         }

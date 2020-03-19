@@ -1,5 +1,5 @@
 (() => {
-    if (document.location.href.includes('/project/')) {
+    if (document.location.href.match('\/module\/[0-9]{4}\/[A-Z]-[A-Z]{3}-[0-9]{3}\/[A-Z]{3}-[0-9]+-[0-9]+\/acti-[0-9]+\/project')) {
         console.log("Intra refined Setup: PROJECT");
 
         Array.from(document.getElementsByClassName('group complete')).forEach((group) => {
