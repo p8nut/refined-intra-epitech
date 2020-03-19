@@ -1,7 +1,7 @@
 {
     "name": "Refined intra Epitech",
     "description": "This extension aim to upgrade the user experience on the epitech's intra",
-    "version": "1.0",
+    "version": "1.0.1",
     "manifest_version": 2,
     "content_scripts": [
         {
