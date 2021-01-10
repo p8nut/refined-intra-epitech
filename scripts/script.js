@@ -1,7 +1,6 @@
-function createButtonTeams(students) {
-    console.log(students)
+function createButton(title, url) {
     const button = document.createElement("A");
-    button.innerHTML = '<span><span class="label">Call with Teams</span></span>';
+    button.innerHTML = `<span><span class="label">${title}</span></span>`;
 
     const class_ = document.createAttribute('class');
     class_.value = 'button upload';
@@ -12,8 +11,12 @@ function createButtonTeams(students) {
     button.setAttributeNode(target);
 
     const href = document.createAttribute('href');
-    href.value = 'https://teams.microsoft.com/l/chat/0/0?users=' + ''.concat(students);
+    href.value = url;
     button.setAttributeNode(href);
 
     return button
+}
+
+function createButtonTeams(students) {
+    return createButton("Call with Teams", 'https://teams.microsoft.com/l/chat/0/0?users=' + ''.concat(students));
 }

@@ -3,6 +3,7 @@
     "description": "This extension aim to upgrade the user experience on the epitech's intra",
     "version": "1.0.1",
     "manifest_version": 2,
+    "options_page": "options.html",
     "content_scripts": [
         {
             "matches": [
@@ -12,6 +13,7 @@
                 "addon.css"
             ],
             "js": [
+                "scripts/all.js",
                 "scripts/script.js",
                 "scripts/modules.js",
                 "scripts/user.js", 
@@ -26,6 +28,7 @@
         "storage",
         "webRequestBlocking",
         "webRequest",
+        "cookies",
         "*://intra.epitech.eu/*"
     ],
     "background": {
