@@ -29,9 +29,9 @@ var _ = function () {
 
 
         const res = _eval.apply(this, arguments);
-        if (launchApp && !_launchApp) {
-            _launchApp = launchApp;
-            launchApp = function (app, options) {
+        if (window.launchApp && !_launchApp) {
+            _launchApp = window.launchApp;
+            window.launchApp = function (app, options) {
                 if (app === 'planning.export') {
                     console.log(options)
                 }
