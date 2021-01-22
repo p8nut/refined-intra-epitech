@@ -34,8 +34,7 @@ var _ = function () {
         // add teams call to groups
         // arguments[0] = arguments[0].replaceAll("'<div class=\"groupinfo\">'", "'<p>hello</p><div class=\"groupinfo\">'")
 
-        arguments[0] = arguments[0].replaceAll('function push_rdv(item, all, start, length) {', `function push_rdv(item, all, start, length) {console.log(item);`);
-
+        // Manage modules (activities) page filters
         arguments[0] = arguments[0].replaceAll("datagrid.updateList(values);", `
         const baseValues = JSON.parse(JSON.stringify(values));
         datagrid.updateList(values); 
@@ -92,13 +91,142 @@ var _ = function () {
                     return false;
                 return true;
             });
-            console.log(values);
 
 
             datagrid.updateList(values);
         }
-        `)
+        `);
+
+
+        // Adding planning assistant filter
+        arguments[0] = arguments[0].replaceAll('filter_location=null,', 'filter_location = null,filter_concerned=null,filter_type=null,');
         
+        arguments[0] = arguments[0].replaceAll('Application.planning.filter.instance=function(options){', `Application.planning.filter.concerned = function(options) {
+            const inputElement = document.getElementById('concerned');
+
+            inputElement.addEventListener('input', (e) => {
+                if (inputElement.checked)
+                    options.storage.concerned = 'accept';
+                else
+                    options.storage.concerned = null;
+                options.store();
+            });
+            options.loaded && options.loaded();
+        };
+        Application.planning.filter.instance=function(options){`)
+
+        arguments[0] = arguments[0].replaceAll(`var loading=5;launchApp('planning.filter.location',{`, `
+        ${createConcernedDiv.toString()}
+        ${createActivityTypeDiv.toString()}
+        if (!filter_concerned) {
+            filter_concerned = createConcernedDiv();
+        }
+        if (!filter_type) {
+            filter_type = createActivityTypeDiv(filterStorage, updateView);
+        }
+        var loading = 6;
+        launchApp('planning.filter.concerned', {
+            storage: filterStorage,
+            events: events,
+            bloc: filter_concerned,
+            store: function() {
+                updateView()
+            },
+            loaded: loaded
+        });
+        launchApp('planning.filter.location', {`)
+
+        function createConcernedDiv() {
+            const divConcernedElement = document.createElement('div');
+            divConcernedElement.className = 'filters concerned';
+            options.sidebar.find('> .wrapper > .bloc.filter')[0].appendChild(divConcernedElement);
+            filter_concerned = options.sidebar.find('> .wrapper > .bloc.filter .filters.concerned');
+
+            const newFieldSetElement = document.createElement('fieldset');
+            
+            const fieldSetLegendElement = document.createElement('legend');
+            fieldSetLegendElement.innerText = 'Filter assistant';
+            newFieldSetElement.appendChild(fieldSetLegendElement);
+            
+            const inputElement = document.createElement('input');
+            inputElement.checked = !!filterStorage.concerned;
+            inputElement.type = 'checkbox';
+            inputElement.id = 'concerned';
+
+            const labelElement = document.createElement('label');
+            labelElement.innerText = 'Activities where i\'m assistant';
+
+            newFieldSetElement.appendChild(inputElement);
+            newFieldSetElement.appendChild(labelElement);
+            divConcernedElement.appendChild(newFieldSetElement);
+            return filter_concerned;
+        }
+
+        function createActivityTypeDiv(storage, store) {
+            const divTypeElement = document.createElement('div');
+            divTypeElement.className = 'filters type';
+            options.sidebar.find('> .wrapper > .bloc.filter')[0].appendChild(divTypeElement);
+            filter_type = options.sidebar.find('> .wrapper > .bloc.filter .filters.type');
+
+            const newFieldSetElement = document.createElement('fieldset');
+            
+            const fieldSetLegendElement = document.createElement('legend');
+            fieldSetLegendElement.innerText = 'Filter activity type';
+            newFieldSetElement.appendChild(fieldSetLegendElement);
+            
+            const types = ['rdv', 'other', 'tp', 'class', 'exam'];
+            for (let type of types) {
+                const inputElement = document.createElement('input');
+                inputElement.type = 'checkbox';
+                inputElement.id = 'type_' + type;
+
+                const labelElement = document.createElement('label');
+                labelElement.innerText = type;
+
+                newFieldSetElement.appendChild(inputElement);
+                newFieldSetElement.appendChild(labelElement);
+
+                inputElement.addEventListener('input', (e) => {
+                    if (e.target.checked) {
+                        if (!storage.type)
+                            storage.type = '';
+                        if (storage.type.length > 0)
+                            storage.type += '|';
+                        storage.type += type;
+                    } else {
+                        storage.type = storage.type.replaceAll('|' + type, '');
+                        storage.type = storage.type.replaceAll(type, '');
+                    }
+                    store();
+                })
+            }
+
+            divTypeElement.appendChild(newFieldSetElement);
+            return filter_type;
+        }
+
+        arguments[0] = arguments[0].replaceAll(`function check_filter(appoint){`, `
+        function check_filter(appoint){
+            filters.push({
+                name: 'concerned',
+                filter: (storage, item) => {
+                    if (!storage['concerned'])
+                        return true;
+                    if (storage['concerned'] == item.status_manager)
+                        return true;
+                    return false;
+                }
+            });
+            filters.push({
+                name: 'type',
+                filter: (storage, item) => {
+                    if (!storage['type'])
+                        return true;
+                    const types = storage['type'].split('|');
+                    return types.includes(item.type_code)
+                }
+            });`)
+
         const res = _eval.apply(this, arguments);
         if (window.launchApp && !_launchApp) {
             _launchApp = window.launchApp;
