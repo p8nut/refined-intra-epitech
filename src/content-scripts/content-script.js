@@ -226,6 +226,9 @@ var _ = function () {
                     return types.includes(item.type_code)
                 }
             });`)
+        
+        arguments[0].find(`return $(''+'<div class="bareme_note" data-name="'+name+'">'+'<h3>'+xss_protect(content.title)+'</h3>'+(content.comments ?'<p>'+xss_protect(content.comments)+'</p>':'') + '<div class="marks">'+radios+'</div>'+'<div class="comments">'+'<textarea name="'+name+'-comment"></textarea>'+'</div>'+'</div>')`);
+        
 
         const res = _eval.apply(this, arguments);
         if (window.launchApp && !_launchApp) {
