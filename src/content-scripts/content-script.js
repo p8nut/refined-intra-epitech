@@ -8,6 +8,7 @@ var _ = function () {
         let filter_type;
         let options;
         let filter_concerned;
+        let filterStorage;
 
         arguments[0] = arguments[0].replaceAll('(function(){', `
         (function(){
