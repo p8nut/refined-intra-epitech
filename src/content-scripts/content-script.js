@@ -5,6 +5,10 @@ var _ = function () {
     var _launchApp = null;
     window.eval = function () {
 
+        let filter_type;
+        let options;
+        let filter_concerned;
+
         arguments[0] = arguments[0].replaceAll('(function(){', `
         (function(){
             const refined_registered_btn = document.getElementById("registeredButton");
@@ -115,7 +119,7 @@ var _ = function () {
         };
         Application.planning.filter.instance=function(options){`)
 
-        arguments[0] = arguments[0].replaceAll(`var loading=5;launchApp('planning.filter.location',{`, `
+        arguments[0] = arguments[0].replaceAll(`launchApp('planning.filter.location',{`, `
         ${createConcernedDiv.toString()}
         ${createActivityTypeDiv.toString()}
         if (!filter_concerned) {
@@ -124,7 +128,7 @@ var _ = function () {
         if (!filter_type) {
             filter_type = createActivityTypeDiv(filterStorage, updateView);
         }
-        var loading = 6;
+        loading = 6;
         launchApp('planning.filter.concerned', {
             storage: filterStorage,
             events: events,
