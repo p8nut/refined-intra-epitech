@@ -234,6 +234,20 @@ var _ = function () {
         
         //arguments[0].find(`return $(''+'<div class="bareme_note" data-name="'+name+'">'+'<h3>'+xss_protect(content.title)+'</h3>'+(content.comments ?'<p>'+xss_protect(content.comments)+'</p>':'') + '<div class="marks">'+radios+'</div>'+'<div class="comments">'+'<textarea name="'+name+'-comment"></textarea>'+'</div>'+'</div>')`);
         
+        // Add mark button to project allowing to go to https://intra.epitech.eu/module/20XX/B-XXX-XXX/XXX-X-X/acti-XXXXXX/bareme/GROUP_NAME
+        arguments[0] = arguments[0].replaceAll('for(var i=0;i<options.rdvs.length;i++)add_element(options.rdvs[i],li_tpl,list)', `for (var i = 0; i < options.rdvs.length; i++) add_element(options.rdvs[i], li_tpl, list);
+        teamCode = options.group[0].dataset.code
+        function add_this_project(item, li_tpl, list) {
+            var li = li_tpl.clone(true);
+            li.find('.icon')[0].setAttribute('style', "background-position: -211px -356px; width: 16px; height:16px; margin-left: 14px; margin-bottom: 9px");
+            li.find('.label').html(item.title);
+            li.find('a').attr({
+                href: baseUrl(item.link)
+            });
+            li.appendTo(list);
+            return li
+        };
+        add_this_project({link: '../bareme/' + teamCode + '/',notation: true,title: "This Project"}, li_tpl, list)`)
 
         const res = _eval.apply(this, arguments);
         if (window.launchApp && !_launchApp) {
